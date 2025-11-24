@@ -24,9 +24,20 @@
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             overflow-x: hidden;
+        }
+
+        /* Header del terror */
+        header {
+            background: linear-gradient(180deg, #1a0505 0%, #0f0f0f 100%);
+            border-bottom: 4px solid #4a0404;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            width: 100%;
+            padding: 2rem 1rem;
+            z-index: 50;
+            position: relative;
         }
 
         /* Efecto de Niebla (Animación de fondo) */
@@ -152,7 +163,7 @@
             border-color: #2c1a0b transparent transparent transparent;
         }
 
-        /* ESTILOS NUEVOS: Glosario */
+        /* Glosario */
         .glossary-term {
             color: #2563eb; /* Azul legible (Tailwind blue-600) */
             font-weight: bold;
@@ -191,6 +202,18 @@
             background: rgba(0,0,0,0.7);
             z-index: 99;
             backdrop-filter: blur(2px);
+        }
+
+        /* Estilo para las imágenes insertadas */
+        .story-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border: 4px solid #2c1a0b;
+            border-radius: 4px;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            filter: sepia(0.3) contrast(1.1);
         }
 
         /* Animaciones */
@@ -265,18 +288,20 @@
         <button onclick="closeGlossary()" class="mt-4 text-sm underline text-gray-400 hover:text-white">Cerrar</button>
     </div>
 
+    <!-- CABECERA NUEVA -->
+    <header>
+        <h1 class="font-horror text-4xl md:text-6xl text-center text-red-700 drop-shadow-lg tracking-widest">
+            Una historia de amor en el cementerio
+            <span class="block text-2xl md:text-3xl text-gray-400 mt-2 font-parchment italic">- El Final -</span>
+        </h1>
+    </header>
+
     <!-- Contenedor Principal (El Pergamino) -->
-    <main class="parchment w-11/12 max-w-3xl p-8 md:p-16 rounded-sm shadow-2xl m-4 relative">
+    <main class="parchment w-11/12 max-w-3xl p-8 md:p-16 rounded-sm shadow-2xl m-8 relative">
         
         <!-- Elementos decorativos del pergamino -->
         <div class="blood-stain" style="top: 10%; right: 5%; width: 80px; height: 80px; transform: scale(1.2);"></div>
         <div class="blood-stain" style="bottom: 15%; left: 8%; width: 120px; height: 100px; opacity: 0.2;"></div>
-
-        <h1 class="font-horror text-4xl md:text-5xl text-center mb-8 text-red-900 drop-shadow-sm">
-            Una historia de amor en el cementerio
-            <br>
-            <span class="text-2xl text-black block mt-2">- El Final -</span>
-        </h1>
 
         <!-- PÁGINA 1 -->
         <div id="page1" class="page-content active">
@@ -341,6 +366,9 @@
                 </p>
             </div>
 
+            <!-- Imagen Parte 1 -->
+            <img src="image-1.png" alt="Escena romántica en la cripta" class="story-image">
+
             <!-- Botones Página 1 -->
             <div class="mt-10 flex justify-between items-center">
                 <div id="feedback1" class="font-parchment text-lg font-bold min-h-[30px]"></div>
@@ -389,7 +417,7 @@
                     un vestido de fiesta.
                 </p>
                 <p>
-                    Entre las manos huesudas del <span class="glossary-term" onclick="showGlossary('cadáver')">cadáver</span> 
+                    Entre las manos <span class="glossary-term" onclick="showGlossary('huesudas')">huesudas</span> del <span class="glossary-term" onclick="showGlossary('cadáver')">cadáver</span> 
                     <span class="input-wrapper">
                         <input type="text" class="verb-input" data-answer="había" data-verb="haber" placeholder="">
                     </span>
@@ -415,6 +443,9 @@
                     a <span class="glossary-term" onclick="showGlossary('desvanecerse')">desvanecerse</span> en la niebla del suelo.
                 </p>
             </div>
+
+            <!-- Imagen Parte 2 -->
+            <img src="image-2.png" alt="Terror y desaparición en la cripta" class="story-image">
 
             <!-- Botones Página 2 -->
             <div class="mt-10 flex justify-between items-center">
@@ -446,7 +477,8 @@
             "cadáver": "corpse",
             "centenario": "centenary (100th anniversary)",
             "traslúcidos": "translucent",
-            "desvanecerse": "to fade away"
+            "desvanecerse": "to fade away",
+            "huesudas": "bony"
         };
 
         function showGlossary(word) {
