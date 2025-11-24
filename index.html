@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una historia de amor en el cementerio - El final</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        /* Tipografías */
+        .font-horror {
+            font-family: 'Creepster', system-ui;
+            letter-spacing: 2px;
+        }
+        .font-parchment {
+            font-family: 'IM Fell English', serif;
+        }
+
+        /* Fondo y Atmósfera */
+        body {
+            background-color: #0f0f0f;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 100%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Efecto de Niebla (Animación de fondo) */
+        @keyframes fog {
+            0% { transform: translateX(-10%) translateY(0); opacity: 0.3; }
+            50% { transform: translateX(10%) translateY(-10px); opacity: 0.5; }
+            100% { transform: translateX(-10%) translateY(0); opacity: 0.3; }
+        }
+        .fog-layer {
+            position: fixed;
+            top: 0; left: 0; width: 200%; height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+            animation: fog 20s infinite ease-in-out;
+        }
+
+        /* Estilo Pergamino */
+        .parchment {
+            background-color: #dcbfa6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239c8c74' fill-opacity='0.1'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'/%3E%3C/g%3E%3C/svg%3E");
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 100px rgba(60, 40, 20, 0.4);
+            border: 1px solid #5c4a35;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Contenedor del Input para posicionamiento relativo de pistas */
+        .input-wrapper {
+            position: relative;
+            display: inline-block;
+            transition: margin-right 0.3s ease;
+        }
+        .input-wrapper.show-hint-space {
+            margin-right: 30px; /* Espacio para el botón */
+        }
+
+        /* Inputs personalizados */
+        input.verb-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #5a4632;
+            color: #2c1a0b;
+            font-family: 'IM Fell English', serif;
+            font-size: 1.1em;
+            text-align: center;
+            width: 100px;
+            padding: 0 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        input.verb-input:focus {
+            outline: none;
+            border-bottom: 2px solid #8b0000;
+            background-color: rgba(139, 0, 0, 0.05);
+        }
+        input.correct {
+            border-bottom: 2px solid #15803d !important; /* Green */
+            color: #15803d !important;
+            background-color: rgba(21, 128, 61, 0.1) !important;
+        }
+        input.incorrect {
+            border-bottom: 2px solid #dc2626 !important; /* Red */
+            color: #dc2626 !important;
+            background-color: rgba(220, 38, 38, 0.1) !important;
+            animation: shake 0.5s;
+        }
+
+        /* Estilos para el sistema de pistas */
+        .hint-btn {
+            position: absolute;
+            right: -28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            background: #8b0000;
+            color: #fff;
+            border-radius: 50%;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid #5c4a35;
+            z-index: 20;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hint-btn:hover {
+            background: #a50000;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .hint-tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c1a0b;
+            color: #dcbfa6;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 1px solid #5c4a35;
+            z-index: 30;
+            font-family: 'IM Fell English', serif;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+            pointer-events: none; /* Click through to document usually, but purely visual here */
+        }
+        .hint-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #2c1a0b transparent transparent transparent;
+        }
+
+        /* ESTILOS NUEVOS: Glosario */
+        .glossary-term {
+            color: #2563eb; /* Azul legible (Tailwind blue-600) */
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 1px dashed #2563eb;
+            transition: all 0.2s;
+        }
+        .glossary-term:hover {
+            color: #1e40af;
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Modal del Glosario */
+        #glossary-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c1a0b;
+            color: #dcbfa6;
+            padding: 20px;
+            border: 2px solid #5c4a35;
+            border-radius: 8px;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            text-align: center;
+            min-width: 300px;
+            font-family: 'IM Fell English', serif;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #glossary-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 99;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Animaciones */
+        @keyframes pageTurnEnter {
+            from { opacity: 0; transform: rotateY(90deg); }
+            to { opacity: 1; transform: rotateY(0); }
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(5px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .page-content {
+            display: none;
+            animation: pageTurnEnter 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-origin: left center;
+        }
+        .page-content.active {
+            display: block;
+        }
+
+        /* Botones */
+        .gothic-btn {
+            background-color: #2c1a0b;
+            color: #dcbfa6;
+            border: 1px solid #5c4a35;
+            font-family: 'Creepster', cursive;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .gothic-btn:hover {
+            background-color: #8b0000;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+        }
+        
+        /* Mancha de sangre decorativa */
+        .blood-stain {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #8b0000 20%, transparent 70%);
+            opacity: 0.3;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <div class="fog-layer"></div>
+
+    <!-- Modal Glosario -->
+    <div id="glossary-overlay" onclick="closeGlossary()"></div>
+    <div id="glossary-modal">
+        <h3 id="glossary-word" class="text-xl font-bold mb-2 text-white"></h3>
+        <p id="glossary-translation" class="text-lg text-blue-300"></p>
+        <button onclick="closeGlossary()" class="mt-4 text-sm underline text-gray-400 hover:text-white">Cerrar</button>
+    </div>
+
+    <!-- Contenedor Principal (El Pergamino) -->
+    <main class="parchment w-11/12 max-w-3xl p-8 md:p-16 rounded-sm shadow-2xl m-4 relative">
+        
+        <!-- Elementos decorativos del pergamino -->
+        <div class="blood-stain" style="top: 10%; right: 5%; width: 80px; height: 80px; transform: scale(1.2);"></div>
+        <div class="blood-stain" style="bottom: 15%; left: 8%; width: 120px; height: 100px; opacity: 0.2;"></div>
+
+        <h1 class="font-horror text-4xl md:text-5xl text-center mb-8 text-red-900 drop-shadow-sm">
+            Una historia de amor en el cementerio
+            <br>
+            <span class="text-2xl text-black block mt-2">- El Final -</span>
+        </h1>
+
+        <!-- PÁGINA 1 -->
+        <div id="page1" class="page-content active">
+            <div class="font-parchment text-xl md:text-2xl leading-relaxed text-justify space-y-6">
+                <p>
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="hablaron" data-verb="hablar" placeholder="">
+                    </span>
+                    un rato y ella le 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="pidió" data-verb="pedir" placeholder="">
+                    </span>
+                    irse a un lugar en el que pudieran estar solos. Javier, sin dudarlo, le 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="dijo" data-verb="decir" placeholder="">
+                    </span>
+                    que sí.
+                </p>
+                <p>
+                    Se 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="separaron" data-verb="separar" placeholder="">
+                    </span>
+                    y después de andar 5 minutos, Marisa
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="entró" data-verb="entrar" placeholder="">
+                    </span>
+                    en una <span class="glossary-term" onclick="showGlossary('cripta')">cripta</span>. Javier la 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="siguió" data-verb="seguir" placeholder="">
+                    </span>.
+                </p>
+                <p>
+                    Una vez dentro, Marisa le 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="dijo" data-verb="decir" placeholder="">
+                    </span>
+                    que
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="estaba" data-verb="estar" placeholder="">
+                    </span>
+                    enamorada de él y que 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="quería" data-verb="querer" placeholder="">
+                    </span>
+                    darle un beso, pero que 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="tenía" data-verb="tener" placeholder="">
+                    </span>
+                    que cerrar los ojos.
+                </p>
+                <p>
+                    Javier, contentísimo,
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="cerró" data-verb="cerrar" placeholder="">
+                    </span>
+                    los ojos y 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="esperó" data-verb="esperar" placeholder="">
+                    </span>
+                    el beso...
+                </p>
+            </div>
+
+            <!-- Botones Página 1 -->
+            <div class="mt-10 flex justify-between items-center">
+                <div id="feedback1" class="font-parchment text-lg font-bold min-h-[30px]"></div>
+                <div class="flex gap-4">
+                    <button onclick="checkAnswers('page1')" class="gothic-btn px-6 py-2 rounded text-xl cursor-pointer">
+                        Comprobar
+                    </button>
+                    <button onclick="changePage('page2')" class="gothic-btn px-6 py-2 rounded text-xl cursor-pointer">
+                        Siguiente &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA 2 -->
+        <div id="page2" class="page-content">
+            <div class="font-parchment text-xl md:text-2xl leading-relaxed text-justify space-y-6">
+                <p>
+                    ... Sin embargo, el beso nunca 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="llegó" data-verb="llegar" placeholder="">
+                    </span>.
+                    En su lugar, el <span class="glossary-term" onclick="showGlossary('bullicio')">bullicio</span> de la fiesta de fuera se 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="detuvo" data-verb="detener" placeholder="">
+                    </span>
+                    <span class="glossary-term" onclick="showGlossary('en seco')">en seco</span>, reemplazado por un silencio <span class="glossary-term" onclick="showGlossary('sepulcral')">sepulcral</span>. Javier
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="abrió" data-verb="abrir" placeholder="">
+                    </span>
+                    los ojos, confundido.
+                </p>
+                <p>
+                    La cripta 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="estaba" data-verb="estar" placeholder="">
+                    </span>
+                    <span class="glossary-term" onclick="showGlossary('en ruinas')">en ruinas</span>, llena de <span class="glossary-term" onclick="showGlossary('telarañas')">telarañas</span> y <span class="glossary-term" onclick="showGlossary('polvo')">polvo</span> de décadas. Frente a él no 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="estaba" data-verb="estar" placeholder="">
+                    </span>
+                    la Marisa joven y bella, sino un esqueleto vestido con <span class="glossary-term" onclick="showGlossary('harapos')">harapos</span> de lo que alguna vez 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="fue" data-verb="ser" placeholder="">
+                    </span>
+                    un vestido de fiesta.
+                </p>
+                <p>
+                    Entre las manos huesudas del <span class="glossary-term" onclick="showGlossary('cadáver')">cadáver</span> 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="había" data-verb="haber" placeholder="">
+                    </span>
+                    una nota amarillenta que 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="decía" data-verb="decir" placeholder="">
+                    </span>:
+                    'Gracias por venir a mi <span class="glossary-term" onclick="showGlossary('centenario')">centenario</span>'.
+                </p>
+                <p>
+                    Javier 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="quiso" data-verb="querer" placeholder="">
+                    </span>
+                    gritar, pero al intentar salir, 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="notó" data-verb="notar" placeholder="">
+                    </span>
+                    que sus pies se habían vuelto <span class="glossary-term" onclick="showGlossary('traslúcidos')">traslúcidos</span> y 
+                    <span class="input-wrapper">
+                        <input type="text" class="verb-input" data-answer="empezaban" data-verb="empezar" placeholder="">
+                    </span>
+                    a <span class="glossary-term" onclick="showGlossary('desvanecerse')">desvanecerse</span> en la niebla del suelo.
+                </p>
+            </div>
+
+            <!-- Botones Página 2 -->
+            <div class="mt-10 flex justify-between items-center">
+                 <div id="feedback2" class="font-parchment text-lg font-bold min-h-[30px]"></div>
+                 <div class="flex gap-4">
+                    <button onclick="changePage('page1')" class="gothic-btn px-6 py-2 rounded text-xl cursor-pointer">
+                        &larr; Anterior
+                    </button>
+                    <button onclick="checkAnswers('page2')" class="gothic-btn px-6 py-2 rounded text-xl cursor-pointer">
+                        Comprobar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Vocabulario (Mirroring the JSON file for standalone functionality)
+        const vocabulary = {
+            "cripta": "crypt",
+            "bullicio": "bustle / loud noise",
+            "en seco": "abruptly / instantly",
+            "sepulcral": "sepulchral (deathly)",
+            "en ruinas": "in ruins",
+            "telarañas": "cobwebs",
+            "polvo": "dust",
+            "harapos": "rags",
+            "cadáver": "corpse",
+            "centenario": "centenary (100th anniversary)",
+            "traslúcidos": "translucent",
+            "desvanecerse": "to fade away"
+        };
+
+        function showGlossary(word) {
+            const translation = vocabulary[word];
+            if (translation) {
+                document.getElementById('glossary-word').innerText = word.charAt(0).toUpperCase() + word.slice(1);
+                document.getElementById('glossary-translation').innerText = translation;
+                
+                document.getElementById('glossary-overlay').style.display = 'block';
+                document.getElementById('glossary-modal').style.display = 'block';
+            }
+        }
+
+        function closeGlossary() {
+            document.getElementById('glossary-overlay').style.display = 'none';
+            document.getElementById('glossary-modal').style.display = 'none';
+        }
+
+        function changePage(pageId) {
+            // Ocultar todas las páginas
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Mostrar la página seleccionada con un pequeño retraso para reiniciar animación si es necesario
+            const targetPage = document.getElementById(pageId);
+            // Truco para reiniciar la animación CSS
+            targetPage.classList.remove('active');
+            void targetPage.offsetWidth; 
+            targetPage.classList.add('active');
+
+            // Limpiar feedback al cambiar
+            document.getElementById('feedback1').innerText = '';
+            document.getElementById('feedback2').innerText = '';
+        }
+
+        function checkAnswers(pageId) {
+            const container = document.getElementById(pageId);
+            const inputs = container.querySelectorAll('input.verb-input');
+            const feedbackEl = pageId === 'page1' ? document.getElementById('feedback1') : document.getElementById('feedback2');
+            
+            let allCorrect = true;
+            let countCorrect = 0;
+
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.dataset.answer.toLowerCase();
+                const wrapper = input.parentElement;
+
+                // Limpiar clases previas
+                input.classList.remove('correct', 'incorrect');
+                
+                // Limpiar pistas previas si existen
+                const existingBtn = wrapper.querySelector('.hint-btn');
+                const existingTooltip = wrapper.querySelector('.hint-tooltip');
+                if (existingBtn) existingBtn.remove();
+                if (existingTooltip) existingTooltip.remove();
+                wrapper.classList.remove('show-hint-space');
+
+                if (userAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                    countCorrect++;
+                } else {
+                    input.classList.add('incorrect');
+                    allCorrect = false;
+
+                    // Crear elementos de pista
+                    createHintUI(wrapper, input.dataset.verb);
+                }
+            });
+
+            // Mensajes de feedback
+            if (allCorrect) {
+                feedbackEl.innerHTML = '<span class="text-green-800">¡Perfecto! Has sobrevivido... por ahora.</span>';
+            } else {
+                feedbackEl.innerHTML = `<span class="text-red-800">Tienes ${countCorrect} de ${inputs.length} correctas. La maldición continúa.</span>`;
+            }
+        }
+
+        function createHintUI(wrapper, verb) {
+            wrapper.classList.add('show-hint-space');
+
+            // Crear botón de pista
+            const btn = document.createElement('div');
+            btn.className = 'hint-btn';
+            btn.innerHTML = 'i'; // Icono "info"
+            
+            // Crear tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'hint-tooltip';
+            tooltip.innerText = '¿Quieres una pista?';
+
+            // Evento para revelar la pista
+            btn.onclick = function() {
+                tooltip.innerText = 'Usa el verbo: ' + verb;
+            };
+
+            wrapper.appendChild(btn);
+            wrapper.appendChild(tooltip);
+        }
+    </script>
+</body>
+</html>
